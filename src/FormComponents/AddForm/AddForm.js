@@ -9,6 +9,7 @@ const AddForm = props => {
     const [price, setPrice] = useState('');
     const [quantity, setQuantity] = useState('');
     const [sku, setSku] = useState('');
+    const [entry, setEntry] = useState({});
 
     const _detectCategory_idTextChanged = (key, value) => {
         setCategory_id(value);
@@ -41,17 +42,13 @@ const AddForm = props => {
 
     const _add = () => {
         console.log("AddForm _add triggered");
-        props.onAddEntry({ category_id, title, description, price, quantity, sku });
+        props.onAddEntry({entry});
         _clear();
     }
 
     const _clear = () => {
-        setCategory_id('');
-        setTitle('');
-        setDescription('');
-        setPrice('');
-        setQuantity('');
-        setSku('');
+        setEntry({});
+        setCategory_id(''); setTitle(''); setDescription(''); setPrice(''); setQuantity(''); setSku('');
         console.log("_clear event fired");
     }
 
