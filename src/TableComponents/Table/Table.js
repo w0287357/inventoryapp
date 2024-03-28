@@ -25,7 +25,7 @@ const Table = props => {
                         <th>Description</th>
                         <th>Price</th>
                         <th>Quantity</th>
-                        <th>SKU</th>
+                        <th>Sku</th>
                     </tr>
                 </thead>
                 <tbody>

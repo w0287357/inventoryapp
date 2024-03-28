@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import axios from 'axios';
+import axios from "axios";
 import Table from './TableComponents/Table/Table';
 import AddForm from './FormComponents/AddForm/AddForm';
 import EditForm from './FormComponents/EditForm/EditForm';
@@ -8,103 +8,167 @@ import CategoryTable from './CategoryTableComponents/CategoryTable/CategoryTable
 import CategoryAddForm from './CategoryFormComponents/CategoryAddForm/CategoryAddForm';
 import CategoryEditForm from './CategoryFormComponents/CategoryEditForm/CategoryEditForm';
 
+const ItemManagement = ({ entries, onEditEntry, onDeleteEntry, onAddEntry }) => (
+  <div>
+    <AddForm onAddEntry={onAddEntry} />
+    <Table entries={entries} onEditEntry={onEditEntry} onDeleteEntry={onDeleteEntry} />
+  </div>
+);
 
-const App = () => {
-  const [entries, setEntries] = useState([]);
-  const [editing, setEditing] = useState(false);
+const CategoryManagement = ({ entries, onEditEntry, onDeleteEntry, onAddEntry }) => (
+  <div>
+    <CategoryAddForm onAddEntry={onAddEntry} />
+    <CategoryTable entries={entries} onEditEntry={onEditEntry} onDeleteEntry={onDeleteEntry} />
+  </div>
+);
+
+const App = props => {
+  const [items, setItems] = useState([]);
+  const [editingItem, setEditingItem] = useState(false);
+  const [editingCategory, setEditingCategory] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState({});
-  const [showItems, setShowItems] = useState(false);
+  const [showItems, setShowItems] = useState(true); // Initially showing item management
 
   useEffect(() => {
-    let url = 'http://127.0.0.1:3001/entries';
-    axios
-      .get(url)
+    let url = showItems ? "http://127.0.0.1:3001/items" : "http://127.0.0.1:3001/categories";
+    axios.get(url)
       .then(res => {
-        console.log(res.data.entries);
-        setEntries(res.data.entries);
+        setItems(res.data.entries);
       })
       .catch(error => {
         console.log(error);
       });
-  }, []);
+  }, [showItems]);
 
-  const _addEntry = entry => {
-    let url = 'http://127.0.0.1:3001/entries';
-    axios
-      .post(url, {
-        entry: entry,
-      })
-      .then(res => {
-        console.log(res.data.entries);
-        setEntries(res.data.entries);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
+  const _addItem = entry => {
+   //send entry to server via axios
+   //update entries with response
+   console.log("App _addEntry triggered");
 
-  const _editEntry = entry => {
+   let url = "http://127.0.0.1:3001/items";  
+   axios.post(url, {
+           entry: entry
+        })
+        .then( res => {
+           console.log(res.data.entries);
+           setItems(res.data.entries);
+        })
+        .catch(error => {
+           console.log(error);
+        });
+ }
+
+ const _addCategory = entry => {
+   //send entry to server via axios
+   //update entries with response
+   console.log("App _addEntry triggered");
+
+   let url = "http://127.0.0.1:3001/categories";  
+   axios.post(url, {
+           entry: entry
+        })
+        .then( res => {
+           console.log(res.data.entries);
+           setItems(res.data.entries);
+        })
+        .catch(error => {
+           console.log(error);
+        });
+ }
+
+  const editItem = entry => {
     setSelectedEntry(entry);
-    setEditing(true);
+    setEditingItem(true);
   };
 
-  const _updateEntry = entry => {
-    let url = `http://127.0.0.1:3001/entries/${entry.id}`;
-    axios
-      .patch(url, {
-        entry: entry,
-      })
+  const editCategory = entry => {
+   setSelectedEntry(entry);
+   setEditingCategory(true);
+ };
+
+  const updateItems = entry => {
+    let url = `http://127.0.0.1:3001/items/${entry.id}`;
+    axios.patch(url, { entry })
       .then(res => {
-        console.log(res.data.entries);
-        setEntries(res.data.entries);
+         console.log(res.data.entries);
+         setItems(res.data.entries);
       })
       .catch(error => {
         console.log(error);
       });
-
-    setEditing(false);
+    setEditingItem(false);
   };
 
-  const _deleteEntry = entry => {
-    let url = `http://127.0.0.1:3001/entries/${entry.id}`;
-    axios
-      .delete(url, {
-        entry: entry,
-      })
-      .then(res => {
+  const updateCategory = entry => {
+   let url = `http://127.0.0.1:3001/categories/${entry.id}`;
+   axios.patch(url, { entry })
+     .then(res => {
         console.log(res.data.entries);
-        setEntries(res.data.entries);
+        setItems(res.data.entries);
+     })
+     .catch(error => {
+       console.log(error);
+     });
+   setEditingItem(false);
+ };
+
+  const deleteItems = entry => {
+    let url = `http://127.0.0.1:3001/items/${entry.id}`;
+    axios.delete(url)
+      .then(res => {
+      setItems(res.data.entries);
       })
       .catch(error => {
         console.log(error);
       });
   };
 
-  const handleManageItemsClick = () => {
-    setShowItems(true);
-  };
+  const deleteCategories = entry => {
+   let url = `http://127.0.0.1:3001/categories/${entry.id}`;
+   axios.delete(url)
+     .then(res => {
+     setItems(res.data.entries);
+     })
+     .catch(error => {
+       console.log(error);
+     });
+ };
 
   return (
-    <div className="App">
-      {!showItems && (
-        <button onClick={handleManageItemsClick}>Manage Items</button>
-      )}
-      {showItems && (
-        <>
-          {editing ? (
-            <CategoryEditForm onEditEntry={_updateEntry} entry={selectedEntry} />
-          ) : (
-            <CategoryAddForm onAddEntry={_addEntry} />
-          )}
-          <CategoryTable
-            entries={entries}
-            onEditEntry={_editEntry}
-            onDeleteEntry={_deleteEntry}
-          />
-        </>
-      )}
-    </div>
+   <div className="App">
+   <div>
+     <button onClick={() => setShowItems(true)}>Manage Items</button>
+     <button onClick={() => setShowItems(false)}>Manage Categories</button>
+   </div>
+   {editingItem ? (
+     <div>
+       {/* Render EditForm based on showItems */}
+       {showItems ? (
+         <EditForm onEditEntry={updateItems} entry={selectedEntry} />
+       ) : (
+         <CategoryEditForm onEditEntry={updateCategory} entry={selectedEntry} />
+       )}
+     </div>
+   ) : (
+     // Render ItemManagement or CategoryManagement based on showItems
+     showItems ? (
+       <ItemManagement
+         entries={items}
+         onEditEntry={editItem}
+         onDeleteEntry={deleteItems}
+         onAddEntry={_addItem}
+       />
+     ) : (
+       <CategoryManagement
+         entries={items}
+         onEditEntry={editCategory}
+         onDeleteEntry={deleteCategories}
+         onAddEntry={_addCategory}
+       />
+     )
+   )}
+ </div>
   );
-};
+}
 
 export default App;
