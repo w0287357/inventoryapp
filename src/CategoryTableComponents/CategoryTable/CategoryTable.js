@@ -1,6 +1,6 @@
 import React from "react";
 import CategoryTableRow from "../CategoryTableRow/CategoryTableRow";
-import './CategoryTable.css';
+import './CategoryTable.scss';
 
 const CategoryTable = props => {
 

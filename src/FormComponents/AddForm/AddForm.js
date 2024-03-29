@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
-import './AddForm.css';
+import './AddForm.scss';
 import Button from "../Button/Button";
+import axios from "axios";
 
 const AddForm = props => {
     const [category_id, setCategory_id] = useState('');
@@ -10,11 +11,8 @@ const AddForm = props => {
     const [quantity, setQuantity] = useState('');
     const [sku, setSku] = useState('');
     const [entry, setEntry] = useState({});
+    const [availableCategoryIds, setAvailableCategoryIds] = useState([]);
 
-    const _detectCategory_idTextChanged = (key, value) => {
-        setCategory_id(value);
-        console.log("_detectCategory_idTextChanged event fired");
-    }
     const _detectTitleTextChanged = (key, value) => {
         setTitle(value);
         console.log("_detectTitleTextChanged event fired");
@@ -38,6 +36,8 @@ const AddForm = props => {
 
     useEffect( () => {
         setEntry({'category_id':category_id, 'title':title, 'description':description, 'price':price, 'quantity':quantity, 'sku':sku });
+        //call the function to show the list of categories
+        fetchAvailableCategoryIds();      
         console.log("setEntry Changed");
     }, [category_id, title, description, price, quantity, sku]);
 
@@ -52,14 +52,31 @@ const AddForm = props => {
         setCategory_id(''); setTitle(""); setDescription(""); setPrice(''); setQuantity(""); setSku("");
         console.log("_clear event fired");
     }
+    
+    //retrieve list of categories
+    const fetchAvailableCategoryIds = entry => {
+      let url = `http://127.0.0.1:3001/categories`;
+      axios.get(url)
+          .then(res => {
+              const categories = res.data.entries.map(entry => entry.id);
+              setAvailableCategoryIds(categories);
+          })
+          .catch(error => {
+              console.error("Error fetching category IDs:", error);
+          });
+   };
 
     return(
         <div className="Form" style={ {marginTop:'16px'} }>
             <Button onclick={ _add } title="Add Entry" />
             <br />
             <label>Category ID</label>
-            <input type="text" placeholder="Category ID" value={ category_id } 
-              onChange={ e => _detectCategory_idTextChanged('value1', e.target.value) } />
+            <select value={category_id} onChange={e => setCategory_id(e.target.value)}>
+                <option value="">Select Category ID</option>
+                {availableCategoryIds.map(category_id => (
+                    <option key={category_id} value={category_id}>{category_id}</option>
+                ))}
+            </select>
             <br />
             <label>Title:</label>
             <input type="text" placeholder="Title" value={ title } 

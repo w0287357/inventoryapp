@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './App.css';
+import './App.scss';
 import axios from "axios";
 import Table from './TableComponents/Table/Table';
 import AddForm from './FormComponents/AddForm/AddForm';

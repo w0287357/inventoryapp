@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import './CategoryAddForm.css';
+import './CategoryAddForm.scss';
 import CategoryButton from "../CategoryButton/CategoryButton";
 
 const CategoryAddForm = props => {

@@ -1,5 +1,5 @@
 import React from "react";
-import './CategoryButton.css';
+import './CategoryButton.scss';
 
 const CategoryButton = props => {
     return(

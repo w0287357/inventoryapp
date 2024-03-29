@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import './EditForm.css';
+import './EditForm.scss';
 import Button from "../Button/Button";
 import axios from "axios";
 
@@ -22,13 +22,9 @@ const EditForm = props => {
         setPrice(props.entry.price);
         setQuantity(props.entry.quantity);
         setSku(props.entry.sku);     
+        //call function to retrieve list of categories
         fetchAvailableCategoryIds();      
     }, [props]);
-    
-    const _detectCategory_idTextChanged = (key, value) => {
-        setCategory_id(value);
-        console.log("_detectCategory_idTextChanged event fired");
-    }
     const _detectTitleTextChanged = (key, value) => {
         setTitle(value);
         console.log("_detectTitleTextChanged event fired");
@@ -55,6 +51,7 @@ const EditForm = props => {
         console.log("setEntry Changed");
     }, [id, category_id, title, description, price, quantity, sku]);
 
+    //retrieve list of categories
     const fetchAvailableCategoryIds = entry => {
       let url = `http://127.0.0.1:3001/categories`;
       axios.get(url)

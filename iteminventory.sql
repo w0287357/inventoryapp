@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Mar 27, 2024 at 11:16 PM
+-- Generation Time: Mar 29, 2024 at 08:19 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -37,7 +37,7 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`id`, `name`) VALUES
-(1, 'Fruits'),
+(1, 'Fruit'),
 (2, 'Vegetables'),
 (3, 'Dairy'),
 (4, 'Meat'),
@@ -45,7 +45,10 @@ INSERT INTO `categories` (`id`, `name`) VALUES
 (6, 'Snacks'),
 (7, 'Beverages'),
 (8, 'Frozen'),
-(9, 'Other');
+(9, 'Cleaning'),
+(10, 'Other'),
+(11, 's'),
+(14, '');
 
 -- --------------------------------------------------------
 
@@ -54,7 +57,7 @@ INSERT INTO `categories` (`id`, `name`) VALUES
 --
 
 CREATE TABLE `items` (
-  `id` int(10) UNSIGNED NOT NULL,
+  `id` int(11) UNSIGNED NOT NULL,
   `category_id` int(10) UNSIGNED DEFAULT NULL,
   `title` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
@@ -68,12 +71,17 @@ CREATE TABLE `items` (
 --
 
 INSERT INTO `items` (`id`, `category_id`, `title`, `description`, `price`, `quantity`, `sku`) VALUES
-(2, 1, 'Apple', 'Fresh Apples from the Valley of Nova Scotia!', 1.89, 122, 'FRU001'),
-(3, 2, 'Carrot', 'Fresh Picked Carrots!', 1.39, 19, 'VEG010'),
-(4, 3, 'Eggs', '12 Fresh Eggs from Nova Fresh', 6.29, 56, 'DAI005'),
-(5, 5, 'Bread', 'Uncle Bens Whole Grian', 5.49, 44, 'GRA011'),
-(6, 7, 'Water 24PK', 'Spring Water 24 Pack', 9.99, 9, 'BEV002'),
-(7, 8, 'TV Dinner', 'Cheap, quick and super easy dinner!', 2.89, 17, 'FRO189');
+(1, 1, 'Apples', 'Apples from the Valley of Nova Scotia!', 1.02, 101, 'FRU004'),
+(2, 2, 'Carrot', 'Fresh Picked Carrots!', 1.39, 19, 'VEG010'),
+(3, 3, 'Eggs', '12 Fresh Eggs from Nova Fresh', 6.29, 56, 'DAI005'),
+(4, 5, 'Bread', 'Uncle Bens Whole Grian', 5.49, 44, 'GRA011'),
+(5, 7, 'Dasani Water (24pk)', 'Spring Water 24 Pack', 9.99, 9, 'BEV002'),
+(6, 8, 'TV Dinner', 'Cheap, quick and super easy dinner!', 2.89, 17, 'FRO189'),
+(7, 10, 'Toilet Paper', 'Charmin Ultra Soft 12Pk', 16.89, 88, 'OTH002'),
+(8, 1, 'Banana', 'Banana from Ecuador! Enjoy!', 0.86, 189, 'FRU009'),
+(9, 1, 'Tomato', 'Roma Tomato', 1.13, 44, 'FRU012'),
+(10, 10, 'Yogurt', 'Vanilla Greek Yogurt (4pk)', 7.99, 23, 'DAI019'),
+(27, 14, '', '', 0.00, 0, '');
 
 --
 -- Indexes for dumped tables
@@ -100,13 +108,13 @@ ALTER TABLE `items`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- Constraints for dumped tables
