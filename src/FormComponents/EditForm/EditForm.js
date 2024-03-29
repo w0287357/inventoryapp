@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import './EditForm.css';
 import Button from "../Button/Button";
+import axios from "axios";
 
 const EditForm = props => {
     const [id, setID] = useState('');
@@ -11,6 +12,7 @@ const EditForm = props => {
     const [quantity, setQuantity] = useState('');
     const [sku, setSku] = useState('');
     const [entry, setEntry] = useState({});
+    const [availableCategoryIds, setAvailableCategoryIds] = useState([]);
 
     useEffect(()=>{
         setID(props.entry.id);
@@ -19,9 +21,10 @@ const EditForm = props => {
         setDescription(props.entry.description);
         setPrice(props.entry.price);
         setQuantity(props.entry.quantity);
-        setSku(props.entry.sku);            
+        setSku(props.entry.sku);     
+        fetchAvailableCategoryIds();      
     }, [props]);
-
+    
     const _detectCategory_idTextChanged = (key, value) => {
         setCategory_id(value);
         console.log("_detectCategory_idTextChanged event fired");
@@ -52,6 +55,18 @@ const EditForm = props => {
         console.log("setEntry Changed");
     }, [id, category_id, title, description, price, quantity, sku]);
 
+    const fetchAvailableCategoryIds = entry => {
+      let url = `http://127.0.0.1:3001/categories`;
+      axios.get(url)
+          .then(res => {
+              const categories = res.data.entries.map(entry => entry.id);
+              setAvailableCategoryIds(categories);
+          })
+          .catch(error => {
+              console.error("Error fetching category IDs:", error);
+          });
+   };
+
     const _edit = () => {
         console.log("EditForm _edit triggered");
         props.onEditEntry(entry);
@@ -69,8 +84,12 @@ const EditForm = props => {
             <Button onclick={ _edit } title="Save Entry" />
             <br />
             <label>Category ID:</label>
-            <input type="text" placeholder="Category_ID" value={ category_id } 
-              onChange={ e => _detectCategory_idTextChanged('value1', e.target.value) } />
+            <select value={category_id} onChange={e => setCategory_id(e.target.value)}>
+                <option value="">Select Category ID</option>
+                {availableCategoryIds.map(category_id => (
+                    <option key={category_id} value={category_id}>{category_id}</option>
+                ))}
+            </select>
             <br />
             <label>Title</label>
             <input type="text" placeholder="Title" value={ title } 

@@ -8,24 +8,9 @@ import CategoryTable from './CategoryTableComponents/CategoryTable/CategoryTable
 import CategoryAddForm from './CategoryFormComponents/CategoryAddForm/CategoryAddForm';
 import CategoryEditForm from './CategoryFormComponents/CategoryEditForm/CategoryEditForm';
 
-const ItemManagement = ({ entries, onEditEntry, onDeleteEntry, onAddEntry }) => (
-  <div>
-    <AddForm onAddEntry={onAddEntry} />
-    <Table entries={entries} onEditEntry={onEditEntry} onDeleteEntry={onDeleteEntry} />
-  </div>
-);
-
-const CategoryManagement = ({ entries, onEditEntry, onDeleteEntry, onAddEntry }) => (
-  <div>
-    <CategoryAddForm onAddEntry={onAddEntry} />
-    <CategoryTable entries={entries} onEditEntry={onEditEntry} onDeleteEntry={onDeleteEntry} />
-  </div>
-);
-
 const App = props => {
   const [items, setItems] = useState([]);
   const [editingItem, setEditingItem] = useState(false);
-  const [editingCategory, setEditingCategory] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState({});
   const [showItems, setShowItems] = useState(true); // Initially showing item management
 
@@ -83,7 +68,7 @@ const App = props => {
 
   const editCategory = entry => {
    setSelectedEntry(entry);
-   setEditingCategory(true);
+   setEditingItem(true);
  };
 
   const updateItems = entry => {
@@ -99,6 +84,7 @@ const App = props => {
     setEditingItem(false);
   };
 
+  //update categories
   const updateCategory = entry => {
    let url = `http://127.0.0.1:3001/categories/${entry.id}`;
    axios.patch(url, { entry })
@@ -112,6 +98,7 @@ const App = props => {
    setEditingItem(false);
  };
 
+ //delete items
   const deleteItems = entry => {
     let url = `http://127.0.0.1:3001/items/${entry.id}`;
     axios.delete(url)
@@ -123,6 +110,8 @@ const App = props => {
       });
   };
 
+
+  //delete categories
   const deleteCategories = entry => {
    let url = `http://127.0.0.1:3001/categories/${entry.id}`;
    axios.delete(url)
@@ -136,38 +125,48 @@ const App = props => {
 
   return (
    <div className="App">
-   <div>
-     <button onClick={() => setShowItems(true)}>Manage Items</button>
-     <button onClick={() => setShowItems(false)}>Manage Categories</button>
-   </div>
-   {editingItem ? (
-     <div>
-       {/* Render EditForm based on showItems */}
-       {showItems ? (
-         <EditForm onEditEntry={updateItems} entry={selectedEntry} />
-       ) : (
-         <CategoryEditForm onEditEntry={updateCategory} entry={selectedEntry} />
-       )}
-     </div>
-   ) : (
-     // Render ItemManagement or CategoryManagement based on showItems
-     showItems ? (
-       <ItemManagement
-         entries={items}
-         onEditEntry={editItem}
-         onDeleteEntry={deleteItems}
-         onAddEntry={_addItem}
-       />
-     ) : (
-       <CategoryManagement
-         entries={items}
-         onEditEntry={editCategory}
-         onDeleteEntry={deleteCategories}
-         onAddEntry={_addCategory}
-       />
-     )
-   )}
- </div>
+  <div>
+    <button onClick={() => setShowItems(true)}>Manage Items</button>
+    <button onClick={() => setShowItems(false)}>Manage Categories</button>
+  </div>
+  {showItems ? (
+    <div>
+      <Table
+        entries={items}
+        onEditEntry={editItem}
+        onDeleteEntry={deleteItems}
+      />
+      {editingItem ? (
+        <EditForm
+          onEditEntry={updateItems}
+          entry={selectedEntry}
+        />
+      ) : (
+        <AddForm
+          onAddEntry={_addItem}
+        />
+      )}
+    </div>
+  ) : (
+    <div>
+      <CategoryTable
+        entries={items}
+        onEditEntry={editCategory}
+        onDeleteEntry={deleteCategories}
+      />
+      {editingItem ? (
+        <CategoryEditForm
+          onEditEntry={updateCategory}
+          entry={selectedEntry}
+        />
+      ) : (
+        <CategoryAddForm
+          onAddEntry={_addCategory}
+        />
+      )}
+    </div>
+  )}
+</div>
   );
 }
 

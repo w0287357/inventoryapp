@@ -67,7 +67,7 @@ module.exports = {
     updateCategory(req, res){
         const { name } = req.body.entry;
         db.query(`UPDATE categories SET name=? WHERE id=?`, 
-            [name, req.params.entry], (err, result)=>{
+            [ name, req.params.entry], (err, result)=>{
             if (err) return res.sendStatus(500);
             
             db.query(`SELECT * FROM categories`, (err, results)=>{
@@ -75,7 +75,7 @@ module.exports = {
                 return res.send({ entries: results });
             });
         });
-    },
+    },    
     destroyCategory(req, res){
         db.query(`DELETE FROM categories WHERE id=?`, [req.params.entry], (err, result)=>{
             if (err) return res.sendStatus(500);

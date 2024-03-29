@@ -5,12 +5,12 @@ import './CategoryTable.css';
 const CategoryTable = props => {
 
     const _editEntry = entry => {
-        console.log("Table _editEntry triggered");
+        console.log("CategoryTable _editEntry triggered");
         props.onEditEntry(entry);
     }
 
     const _deleteEntry = entry => {
-        console.log("Table _deleteEntry triggered");
+        console.log("CategoryTable _deleteEntry triggered");
         props.onDeleteEntry(entry);
     }
 
