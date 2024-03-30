@@ -97,7 +97,7 @@ const AddForm = props => {
             <label>Sku:</label>
             <input type="text" placeholder="Sku" value={ sku } 
               onChange={ e => _detectSkuTextChanged('sku', e.target.value) } />
-            </div>
+        </div>
     );
 }
 export default AddForm;
