@@ -1,0 +1,20 @@
+.App {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; // Center vertically
+    margin: 0;
+    padding: 0;
+}
+  
+button {
+    display: block;
+    margin: 0 auto; // Center horizontally
+    background-color: rgb(222, 221, 221);
+    border-radius: 5%;
+    border-color: rgb(139, 142, 142);
+}
+
+button:hover {
+    background-color: rgb(177, 167, 167);
+}

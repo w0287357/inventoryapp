@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
-import './AddForm.css';
+import React, {useEffect, useState} from "react";
+import './AddForm.scss';
 import Button from "../Button/Button";
+import axios from "axios";
 
 const AddForm = props => {
     const [category_id, setCategory_id] = useState('');
@@ -9,18 +10,16 @@ const AddForm = props => {
     const [price, setPrice] = useState('');
     const [quantity, setQuantity] = useState('');
     const [sku, setSku] = useState('');
+    const [entry, setEntry] = useState({});
+    const [availableCategoryIds, setAvailableCategoryIds] = useState([]);
 
-    const _detectCategory_idTextChanged = (key, value) => {
-        setCategory_id(value);
-        console.log("_detectCategory_idTextChanged event fired");
-    }
     const _detectTitleTextChanged = (key, value) => {
         setTitle(value);
         console.log("_detectTitleTextChanged event fired");
     }
-    const _detectDescriptionTextChanged = (key, value) => {
+    const _detectDecriptionTextChanged = (key, value) => {
         setDescription(value);
-        console.log("_detectDescriptionTextChanged event fired");
+        console.log("_detectDecriptionTextChanged event fired");
     }
     const _detectPriceTextChanged = (key, value) => {
         setPrice(value);
@@ -35,53 +34,69 @@ const AddForm = props => {
         console.log("_detectSkuTextChanged event fired");
     }
 
-    useEffect(() => {
-        console.log("AddForm useEffect fired");
+    useEffect( () => {
+        setEntry({'category_id':category_id, 'title':title, 'description':description, 'price':price, 'quantity':quantity, 'sku':sku });
+        //call the function to show the list of categories
+        fetchAvailableCategoryIds();      
+        console.log("setEntry Changed");
     }, [category_id, title, description, price, quantity, sku]);
 
     const _add = () => {
         console.log("AddForm _add triggered");
-        props.onAddEntry({ category_id, title, description, price, quantity, sku });
+        props.onAddEntry(entry);
         _clear();
     }
 
     const _clear = () => {
-        setCategory_id('');
-        setTitle('');
-        setDescription('');
-        setPrice('');
-        setQuantity('');
-        setSku('');
+        setEntry({});
+        setCategory_id(''); setTitle(""); setDescription(""); setPrice(''); setQuantity(""); setSku("");
         console.log("_clear event fired");
     }
+    
+    //retrieve list of categories
+    const fetchAvailableCategoryIds = entry => {
+      let url = `http://127.0.0.1:3001/categories`;
+      axios.get(url)
+          .then(res => {
+              const categories = res.data.entries.map(entry => entry.id);
+              setAvailableCategoryIds(categories);
+          })
+          .catch(error => {
+              console.error("Error fetching category IDs:", error);
+          });
+   };
 
-    return (
-        <div className="Form" style={{ marginTop: '16px' }}>
-            <Button onClick={_add} title="Add Entry" />
+    return(
+        <div className="Form" style={ {marginTop:'16px'} }>
+            <Button onclick={ _add } title="Add Entry" />
             <br />
-            <label>Category ID:</label>
-            <input type="text" placeholder="Category ID" value={category_id}
-                onChange={e => _detectCategory_idTextChanged('category_id', e.target.value)} />
+            <label>Category ID</label>
+            <select value={category_id} onChange={e => setCategory_id(e.target.value)}>
+                <option value="">Select Category ID</option>
+                {availableCategoryIds.map(category_id => (
+                    <option key={category_id} value={category_id}>{category_id}</option>
+                ))}
+            </select>
             <br />
             <label>Title:</label>
-            <input type="text" placeholder="Title" value={title}
-                onChange={e => _detectTitleTextChanged('title', e.target.value)} />
+            <input type="text" placeholder="Title" value={ title } 
+              onChange={ e => _detectTitleTextChanged('title', e.target.value) } />
             <br />
             <label>Description:</label>
-            <input type="text" placeholder="Description" value={description}
-                onChange={e => _detectDescriptionTextChanged('description', e.target.value)} />
-            <br />
+            <input type="text" placeholder="Description" value={ description } 
+              onChange={ e => _detectDecriptionTextChanged('description', e.target.value) } />
+              <br />
             <label>Price:</label>
-            <input type="text" placeholder="Price" value={price}
-                onChange={e => _detectPriceTextChanged('price', e.target.value)} />
+            <input type="text" placeholder="Price" value={ price } 
+              onChange={ e => _detectPriceTextChanged('price', e.target.value) } />
             <br />
             <label>Quantity:</label>
-            <input type="text" placeholder="Quantity" value={quantity}
-                onChange={e => _detectQuantityTextChanged('quantity', e.target.value)} />
+            <input type="text" placeholder="Quantity" value={ quantity } 
+              onChange={ e => _detectQuantityTextChanged('quantity', e.target.value) } />
             <br />
-            <label>SKU:</label>
-            <input type="text" placeholder="SKU" value={sku}
-                onChange={e => _detectSkuTextChanged('sku', e.target.value)} />
+            <label>Sku:</label>
+            <input type="text" placeholder="Sku" value={ sku } 
+              onChange={ e => _detectSkuTextChanged('sku', e.target.value) } />
         </div>
     );
 }

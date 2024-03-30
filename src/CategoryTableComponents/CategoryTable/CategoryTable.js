@@ -1,38 +1,33 @@
 import React from "react";
-import TableRow from "../TableRow/TableRow";
-import './Table.scss';
+import CategoryTableRow from "../CategoryTableRow/CategoryTableRow";
+import './CategoryTable.scss';
 
-const Table = props => {
+const CategoryTable = props => {
 
     const _editEntry = entry => {
-        console.log("Table _editEntry triggered");
+        console.log("CategoryTable _editEntry triggered");
         props.onEditEntry(entry);
     }
 
     const _deleteEntry = entry => {
-        console.log("Table _deleteEntry triggered");
+        console.log("CategoryTable _deleteEntry triggered");
         props.onDeleteEntry(entry);
     }
 
     return(
-        <div className="Table">
+        <div className="CategoryTable">
             <table style={{ marginTop:'16px' }} border="1">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Category ID</th>
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                        <th>Sku</th>
+                        <th>Category Name</th>
                     </tr>
                 </thead>
                 <tbody>
                     {
                         props.entries.map(
                             (entry, index) => (
-                                <TableRow index={ index } entry={ entry } key={ index } onEditEntry={ _editEntry } onDeleteEntry={ _deleteEntry } />
+                                <CategoryTableRow index={ index } entry={ entry } key={ index } onEditEntry={ _editEntry } onDeleteEntry={ _deleteEntry } />
                             )
                         )
                     }
@@ -42,4 +37,4 @@ const Table = props => {
         </div>
     );
 }
-export default Table;
+export default CategoryTable;

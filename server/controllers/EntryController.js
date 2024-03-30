@@ -45,5 +45,45 @@ module.exports = {
                 return res.send({ entries: results });
             });
         });
+    },
+    indexCategory(req, res) {
+        db.query(`SELECT * FROM categories`, (err, results)=>{
+            if (err) return res.sendStatus(500);
+            return res.send({ entries: results });
+        });
+    },
+    storeCategory(req, res) {
+        const { name } = req.body.entry;
+        db.query(`INSERT INTO categories (name) VALUES (?)`, 
+            [name], (err, result)=>{
+            if (err) return res.sendStatus(500);
+            
+            db.query(`SELECT * FROM categories`, (err, results)=>{
+                if (err) return res.sendStatus(500);
+                return res.send({ entries: results });
+            });
+        });
+    }, 
+    updateCategory(req, res){
+        const { name } = req.body.entry;
+        db.query(`UPDATE categories SET name=? WHERE id=?`, 
+            [ name, req.params.entry], (err, result)=>{
+            if (err) return res.sendStatus(500);
+            
+            db.query(`SELECT * FROM categories`, (err, results)=>{
+                if (err) return res.sendStatus(500);
+                return res.send({ entries: results });
+            });
+        });
+    },    
+    destroyCategory(req, res){
+        db.query(`DELETE FROM categories WHERE id=?`, [req.params.entry], (err, result)=>{
+            if (err) return res.sendStatus(500);
+            
+            db.query(`SELECT * FROM categories`, (err, results)=>{
+                if (err) return res.sendStatus(500);
+                return res.send({ entries: results });
+            });
+        });
     }
 };
